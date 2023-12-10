@@ -1,15 +1,16 @@
 import React,{useState} from 'react';
 import {
-  Text,
   View,
-  ScrollView,
-  Image,Pressable
+  Image,
+  Pressable, 
+  FlatList
 } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import ApplicantsCard from '../../components/custom/applicants-card';
 import ApplicantFilterModal from '../../components/modals/applicant-filter-modal';
 import ApplicantsModal from '../../components/modals/applicants-modal';
 import { useNavigation } from '@react-navigation/native';
+import { ApplicantsList } from '../../local-data/dummy-data';
 
 
 const Applicants=()=>{
@@ -28,14 +29,22 @@ const Applicants=()=>{
           </Pressable>
         </View>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{rowGap:moderateScale(16),padding:moderateScale(16)}}>
-      <ApplicantsCard onPress={()=>navigation.navigate('ApplicantDetails')}/>
-      <ApplicantsCard onPress={()=>navigation.navigate('ApplicantDetails')}/>
-      <ApplicantsCard onPress={()=>navigation.navigate('ApplicantDetails')}/>
-      <ApplicantsCard onPress={()=>navigation.navigate('ApplicantDetails')}/>
-      <ApplicantsCard onPress={()=>navigation.navigate('ApplicantDetails')}/>
-      <ApplicantsCard onPress={()=>navigation.navigate('ApplicantDetails')}/>
-      </ScrollView>
+      <FlatList 
+      data={ApplicantsList}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{padding:moderateScale(16),rowGap:moderateScale(16)}}
+      renderItem={({item})=>
+      <ApplicantsCard 
+      applicationId={item.application_id}
+      applicationDate={item.application_date}
+      IssueDate={item.issue_date}
+      Owner={item.owner}
+      SiteAddress={item.site_address}
+      Application_Type={item.application_type}
+      onPress={()=>navigation.navigate('ApplicantDetails')}/>
+      }
+      keyExtractor={item=>item.application_id}
+      />
       <Pressable style={{position:'absolute',bottom:moderateScale(16),right:'50%',width:moderateScale(40),height:moderateScale(40),borderRadius:moderateScale(100)}} onPress={()=>setFilterVisible(true)}>
         <Image source={require('../../../assets/images/filter.png')} style={{width:'100%',height:'100%'}}/>
       </Pressable>
